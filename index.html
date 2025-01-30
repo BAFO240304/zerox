@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ZEROX Gaming Store</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #00fff2;
+            --secondary-color: #ff0055;
+            --dark-color: #0a0a20;
+        }
+
+        body {
+            background: radial-gradient(circle at center, #1a1a2e, #000000);
+            font-family: 'Arial', sans-serif;
+            color: white;
+        }
+
+        .navbar {
+            background: rgba(10, 10, 32, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 1rem 0;
+            border-bottom: 1px solid rgba(0, 255, 242, 0.1);
+        }
+
+
+        .logo {
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: flex;
+            gap: 5px;
+            perspective: 1000px;
+            margin: 0;
+            padding: 0;
+            position: relative;
+            color: rgba(10, 10, 32, 0.95) !important;
+        }
+
+        .logo span {
+            display: inline-block;
+            position: relative;
+            width: 40px;
+            height: 50px;
+        }
+
+
+        .logo span::after {
+            content: attr(data-letter);
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            color: transparent;
+            font-size: 2.5rem;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .logo span.completed::after {
+            color: white;
+            opacity: 1;
+            text-shadow:
+                0 0 5px var(--primary-color),
+                0 0 10px var(--primary-color),
+                0 0 15px var(--primary-color);
+        }
+
+        .logo span svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo span svg path {
+            fill: none;
+            /*stroke: var(--dark-color); Motivo por el que la letra se muestra, eliminar  esta linea para que este desaparezca */
+            /* Establecer el color del trazo como el color del nav */
+            stroke-width: 2;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px var(--primary-color));
+        }
+
+        /* Punto láser */
+        .laser-point {
+            width: 10px;
+            height: 10px;
+            background: white;
+            position: absolute;
+            border-radius: 70%;
+            filter: blur(2px);
+            box-shadow:
+                0 0 5px #fff,
+                0 0 10px #00fff2,
+                0 0 20px var(--primary-color),
+                0 0 30px var(--primary-color);
+            opacity: 0;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        /* SVG paths para las letras */
+        .logo span svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        .logo span svg path {
+            fill: none;
+            /*stroke: var(--primary-color);  Motivo por el que la letra se muestra, eliminar  esta linea para que este desaparezca */
+            stroke-width: 2;
+            stroke-linecap: round;
+            filter: drop-shadow(0 0 5px var(--primary-color));
+        }
+
+        .nav-link {
+            color: white !important;
+            font-weight: 500;
+            position: relative;
+            transition: all 0.3s ease;
+            margin: 0 1rem;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-color) !important;
+        }
+
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            bottom: 0;
+            left: 0;
+            background: var(--primary-color);
+            transition: width 0.3s ease;
+        }
+
+        .nav-link:hover::after {
+            width: 100%;
+        }
+
+        .search-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(0, 255, 242, 0.2);
+            border-radius: 25px;
+            padding: 0.5rem 1rem;
+            color: white;
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 10px rgba(0, 255, 242, 0.3);
+        }
+
+        .user-actions i {
+            font-size: 1.2rem;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .user-actions i:hover {
+            color: var(--primary-color);
+        }
+
+        .navbar-toggler {
+            border: none;
+            color: white;
+        }
+
+        .navbar-toggler:focus {
+            box-shadow: none;
+        }
+
+        @media (max-width: 700px) {
+            .logo {
+                font-size: 1.2rem;
+                /* Ajusta este tamaño según lo que necesites */
+            }
+        }
+
+        @media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: rgba(10, 10, 32, 0.95);
+                padding: 1rem;
+                border-radius: 10px;
+                margin-top: 1rem;
+            }
+
+            .nav-link {
+                margin: 0.5rem 0;
+            }
+
+            .search-box {
+                margin: 1rem 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg fixed-top">
+        <div class="container">
+            <!-- Punto láser -->
+            <div class="laser-point"></div>
+
+            <a href="">
+                <!-- Logo -->
+                <div class="logo navbar-brand">
+                    <span data-letter="Z" style="color: rgba(10, 10, 32, 0.95);">
+                        <svg viewBox="0 0 40 50">
+                            <path d="M10 10L30 10L10 40L30 40" />
+                        </svg>
+                    </span>
+                    <span data-letter="E" style="color: rgba(10, 10, 32, 0.95);">
+                        <svg viewBox="0 0 40 50">
+                            <path d="M10 10L30 10M10 10L10 40M10 25L25 25M10 40L30 40" />
+                        </svg>
+                    </span>
+                    <span data-letter="R" style="color: rgba(10, 10, 32, 0.95);">
+                        <svg viewBox="0 0 40 50">
+                            <path d="M10 10L25 10C30 10 30 25 25 25L10 25L25 40M10 10L10 40" />
+                        </svg>
+                    </span>
+                    <span data-letter="O" style="color: rgba(10, 10, 32, 0.95);">
+                        <svg viewBox="0 0 40 50">
+                            <path d="M20 10C30 10 30 40 20 40C10 40 10 10 20 10Z" />
+                        </svg>
+                    </span>
+                    <span data-letter="X" style="color: rgba(10, 10, 32, 0.95);">
+                        <svg viewBox="0 0 40 50">
+                            <path d="M10 10L30 40M30 10L10 40" />
+                        </svg>
+                    </span>
+                </div>
+
+            </a>
+
+
+            <!-- Botón hamburguesa para móvil -->
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+                <i class="fas fa-bars"></i>
+            </button>
+
+            <!-- Contenido del menú -->
+            <div class="collapse navbar-collapse" style="margin-left: 50px;" id="navbarContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-home"></i> Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-gamepad"></i> Juegos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-tags"></i> Ofertas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-trophy"></i> eSports</a>
+                    </li>
+                </ul>
+
+                <!-- Barra de búsqueda -->
+                <input type="search" class="search-box me-2" placeholder="Buscar juegos...">
+
+                <!-- Iconos de usuario -->
+                <div class="user-actions d-flex align-items-center">
+                    <i class="fas fa-shopping-cart"></i>
+                    <i class="fas fa-heart"></i>
+                    <i class="fas fa-user"></i>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Contenido de ejemplo -->
+    <div class="container" style="margin-top: 100px;">
+        <h1>Bienvenido a ZEROX Gaming</h1>
+
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.2/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const laserPoint = document.querySelector('.laser-point');
+        const letters = document.querySelectorAll('.logo span');
+
+        function getPathLength(path) {
+            return path.getTotalLength();
+        }
+
+        function updateLaserPosition(progress, path) {
+            const point = path.getPointAtLength(progress);
+            const pathRect = path.getBoundingClientRect();
+            const logoRect = path.closest('.logo').getBoundingClientRect();
+
+            laserPoint.style.left = (pathRect.left - logoRect.left + point.x) + 'px';
+            laserPoint.style.top = (pathRect.top - logoRect.top + point.y) + 'px';
+        }
+
+        async function animateLetter(letterSpan, delay = 0) {
+            const path = letterSpan.querySelector('svg path');
+            const length = getPathLength(path);
+
+            path.style.strokeDasharray = length;
+            path.style.strokeDashoffset = length;
+
+            gsap.to(laserPoint, {
+                opacity: 1,
+                duration: 0.1,
+                delay: delay
+            });
+
+            return new Promise(resolve => {
+                gsap.to(path, {
+                    strokeDashoffset: 0,
+                    duration: 0.8,
+                    delay: delay,
+                    ease: "none",
+                    onUpdate: function () {
+                        const progress = length * (1 - this.progress());
+                        updateLaserPosition(length - progress, path);
+                    },
+                    onComplete: () => {
+                        gsap.to(letterSpan, {
+                            duration: 0.3,
+                            onStart: () => letterSpan.classList.add('completed')
+                        });
+                        resolve();
+                    }
+                });
+            });
+        }
+
+        async function animateAllLetters() {
+            laserPoint.style.opacity = 0;
+            letters.forEach(letter => {
+                letter.classList.remove('completed');
+                const path = letter.querySelector('svg path');
+                path.style.strokeDashoffset = getPathLength(path);
+            });
+
+            for (let i = 0; i < letters.length; i++) {
+                await animateLetter(letters[i], 0);
+                await new Promise(resolve => setTimeout(resolve, 100));
+            }
+
+            gsap.to(laserPoint, {
+                opacity: 0,
+                duration: 0.2
+            });
+
+            // Una vez que la animación se ha completado, agregar la clase 'completed' al logo
+            document.querySelector('.logo').classList.add('completed');
+        }
+
+
+
+        // Iniciar animación
+        window.addEventListener('load', animateAllLetters);
+        window.addEventListener('resize', function () {
+            console.log('Tamaño de la ventana:', window.innerWidth);
+            const logo = document.querySelector('.logo');
+            console.log('Tamaño de fuente del logo:', getComputedStyle(logo).fontSize);
+        });
+
+        // Reiniciar animación al hacer click
+        document.querySelector('.logo').addEventListener('click', animateAllLetters);
+
+        // Mantener el efecto hover 3D
+        const logo = document.querySelector('.logo');
+        logo.addEventListener('mousemove', (e) => {
+            const { clientX } = e;
+            const { left, width } = logo.getBoundingClientRect();
+            const x = (clientX - left) / width;
+
+            letters.forEach((letter, index) => {
+                gsap.to(letter, {
+                    rotateY: ((index + 1) / letters.length - x) * 20,
+                    duration: 0.5
+                });
+            });
+        });
+
+        logo.addEventListener('mouseleave', () => {
+            letters.forEach(letter => {
+                gsap.to(letter, {
+                    rotateY: 0,
+                    duration: 0.5
+                });
+            });
+        });
+    </script>
+</body>
+
+</html>
